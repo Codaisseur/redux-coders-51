@@ -1,32 +1,24 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { getPosts, getLoading } from '../store/posts/selectors';
+import { fetchPosts } from '../store/posts/actions';
 
 const Homepage = () => {
-  const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
+
+  const posts = useSelector(getPosts);
+  const loading = useSelector(getLoading)
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get('https://codaisseur-coders-network.herokuapp.com/posts');
-        console.log(response.data.rows);
-        setPosts(response.data.rows);
-      } catch(e) {
-        console.log(e.message);
-      }
-    }
-    fetchPosts();
+    dispatch(fetchPosts());
   }, [])
-  // Fetch some data and display
-  // 1. Axios to make a request
-  // 2. useEffect to trigger the call
-  // 3. useState to keep the data.
 
   return (
   <div>
     <h1>Codaisseur Redux Posts</h1>
     <div>
-      {posts.map(p => (
-        <div style={{ border: '1px solid black', margin: 10 }}>
+      {loading ? "Loading...." : posts.map(p => (
+        <div style={{ border: '1px solid black', margin: 10 }} key={p.id}>
           <h3>{p.title}</h3>
           <p>{p.content}</p>
         </div>
