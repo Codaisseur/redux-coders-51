@@ -3,6 +3,6 @@ import postReducer from './posts/reducer';
 import { combineReducers } from 'redux';
 
 export default combineReducers({
-  person: userReducer,
+  user: userReducer,
   posts: postReducer
 })
