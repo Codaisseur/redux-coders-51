@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const setToken = (token) => ({
+export const setToken = (token) => ({
   type: "SET_TOKEN",
   payload: token
 })
@@ -25,8 +25,35 @@ export const signup = (name, email, password) => async (dispatch, getState) => {
     const token = response.data.jwt;
     dispatch(setToken(response.data.jwt))
 
-    console.log("signup done, now profile")
+    dispatch(bootstrapLogin(token));
 
+  } catch(e) {
+    console.log(e.message);
+  }
+}
+
+export const login = (email, password, history) => async (dispatch, getState) => {
+  try {
+    const response = await axios.post('https://codaisseur-coders-network.herokuapp.com/login', {
+      email: email,
+      password: password
+    })
+
+    const token = response.data.jwt;
+    dispatch(setToken(response.data.jwt))
+    
+    localStorage.setItem("token", token)
+
+    dispatch(bootstrapLogin(token));
+
+    history.push('/');
+  } catch(e) {
+    console.log(e.message);
+  }
+}
+
+export const bootstrapLogin = (token) => async (dispatch, getState) => {
+  try {
     const profileResponse = await axios.get(
       'https://codaisseur-coders-network.herokuapp.com/me',
       {
@@ -42,3 +69,5 @@ export const signup = (name, email, password) => async (dispatch, getState) => {
     console.log(e.message);
   }
 }
+
+

@@ -15,6 +15,16 @@ export default function reducer(state = initialState, action) {
         all: [...state.all, ...newPosts], // all: [{}, {}, {}, {} ]
       }
     }
+    case "NEW_POST": {
+      // state.all => posts are stored
+      // payload => a new post
+      const oneNewPost = action.payload; // { title, content }
+      return {
+        ...state,
+        all: [oneNewPost, ...state.all]
+      }
+
+    }
     case "START_LOADING": {
       return {
         ...state,

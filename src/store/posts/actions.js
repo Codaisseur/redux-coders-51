@@ -6,6 +6,8 @@ const savePosts = (allPosts) => ({ type: 'STORE_POSTS', payload: allPosts })
 const startLoading = () => ({ type: 'START_LOADING' })
 const stopLoading = () => ({ type: 'STOP_LOADING' })
 
+const newPost = (post) => ({ type: "NEW_POST", payload: post });
+
 
 
 // Parametrized thunk, thunk creator
@@ -25,6 +27,27 @@ export const fetchPosts = () => async (dispatch, getState) => {
     console.log("Data sent to redux!");
 
     dispatch(stopLoading())
+  } catch(e) {
+    console.log(e.message);
+  }
+}
+
+export const createPost = (title, content) => async (dispatch, getState) => {
+  try {
+    const allState = getState();
+
+    const token = allState.user.token;
+
+    const response = await axios.post(
+      'https://codaisseur-coders-network.herokuapp.com/posts',
+      { title, content }, 
+      { headers: { Authorization: `Bearer ${token}` } },
+    )
+
+    console.log(response);
+    // WE USE THE POST WE GET IN THE RESPONSE TO UPDATE REDUX
+    dispatch(newPost(response.data));
+
   } catch(e) {
     console.log(e.message);
   }

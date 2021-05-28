@@ -6,7 +6,8 @@ import Signup from './pages/Signup';
 import CreatePost from './pages/CreatePost';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserProfile } from './store/user/selectors';
-import { logout } from './store/user/actions';
+import { logout, bootstrapLogin, setToken } from './store/user/actions';
+import { useEffect } from 'react';
 
 // 1. Hello message with name
 // 2. Adjust navbar (hide login and signup, show create a post)
@@ -46,6 +47,18 @@ const NavBar = () => {
 }
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      dispatch(bootstrapLogin(token));
+      dispatch(setToken(token));
+    }
+  
+  }, [])
+
+
   return (
     <div className="App">
         <NavBar />
